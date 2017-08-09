@@ -35,7 +35,7 @@ import java.util.*;
 
 public class JimpleLocal implements Local, ConvertToBaf
 {
-    String name;
+    protected String name;
     Type type;
 
     int fixedHashCode;
