@@ -65,6 +65,7 @@ import soot.SootMethod;
 import soot.SootResolver;
 import soot.Type;
 import soot.javaToJimple.IInitialResolver.Dependencies;
+import soot.options.Options;
 import soot.tagkit.AnnotationAnnotationElem;
 import soot.tagkit.AnnotationArrayElem;
 import soot.tagkit.AnnotationBooleanElem;
@@ -588,11 +589,12 @@ public class DexAnnotation {
           clazz.setOuterClass(SootResolver.v().makeClassRef(sootOuterClass));
           assert clazz.getOuterClass() != clazz;
         }
-        // Do not add annotation tag
-        return;
-      case DALVIK_ANNOTATION_MEMBERCLASSES:
-        AnnotationArrayElem arre = (AnnotationArrayElem) getElements(a.getElements()).get(0);
-        for (AnnotationElem ae : arre.getValues()) {
+
+        continue;
+
+      } else if (atypes.equals("dalvik.annotation.MemberClasses") && Options.v().transform_memberclasses_dex_annotation()) {
+        AnnotationArrayElem e = (AnnotationArrayElem) getElements(a.getElements()).get(0);
+        for (AnnotationElem ae : e.getValues()) {
           AnnotationClassElem c = (AnnotationClassElem) ae;
           String innerClass = c.getDesc();
           if (innerClass.contains("$-")) {
