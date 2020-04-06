@@ -51,7 +51,7 @@ public class CallGraph implements Iterable<Edge> {
   protected Map<MethodOrMethodContext, Edge> srcMethodToEdge = new LinkedHashMap<MethodOrMethodContext, Edge>();
   protected Map<Unit, Edge> srcUnitToEdge = new LinkedHashMap<Unit, Edge>();
   protected Map<MethodOrMethodContext, Edge> tgtToEdge = new LinkedHashMap<MethodOrMethodContext, Edge>();
-  protected Edge dummy = new Edge(null, null, null, Kind.INVALID);
+  public Edge dummy = new Edge(null, null, null, Kind.INVALID);
 
   /**
    * Used to add an edge to the call graph. Returns true iff the edge was not already present.
@@ -362,6 +362,8 @@ public class CallGraph implements Iterable<Edge> {
 
     @Override
     public Edge next() {
+      if (position.nextByTgt() == null)
+        System.out.println();
       Edge ret = position;
       position = position.nextByTgt();
       return ret;
