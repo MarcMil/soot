@@ -362,8 +362,6 @@ public class CallGraph implements Iterable<Edge> {
 
     @Override
     public Edge next() {
-      if (position.nextByTgt() == null)
-        System.out.println();
       Edge ret = position;
       position = position.nextByTgt();
       return ret;
