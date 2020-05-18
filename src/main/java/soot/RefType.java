@@ -23,9 +23,7 @@ package soot;
  */
 
 import com.google.common.base.Optional;
-
 import java.util.ArrayDeque;
-
 import soot.util.Switch;
 
 /**
@@ -145,7 +143,7 @@ public class RefType extends RefLikeType implements Comparable<RefType> {
    *          an object to test for equality. @ return true if t is a RefType parametrized by the same name as this.
    */
   public boolean equals(Object t) {
-    return ((t instanceof RefType) && className.equals(((RefType) t).className));
+    return this == t;
   }
 
   public String toString() {

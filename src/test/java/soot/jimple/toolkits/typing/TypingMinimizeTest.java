@@ -43,6 +43,7 @@ import soot.SootClass;
 import soot.Type;
 import soot.jimple.internal.JimpleLocal;
 import soot.jimple.toolkits.typing.fast.BytecodeHierarchy;
+import soot.jimple.toolkits.typing.fast.DefaultTypingStrategy;
 import soot.jimple.toolkits.typing.fast.Typing;
 import soot.options.Options;
 
@@ -260,7 +261,7 @@ public class TypingMinimizeTest {
     typing2.set(x1, Type2);
     typingList.add(typing2);
 
-    Typing.minimize(typingList, new BytecodeHierarchy());
+    DefaultTypingStrategy.INSTANCE.minimize(typingList, new BytecodeHierarchy());
 
     assertEquals(2, typingList.size());
     assertEquals(resultTyping, typingList.get(0));
@@ -290,7 +291,7 @@ public class TypingMinimizeTest {
     typing3.set(x1, Type3);
     typingList.add(typing3);
 
-    Typing.minimize(typingList, new BytecodeHierarchy());
+    DefaultTypingStrategy.INSTANCE.minimize(typingList, new BytecodeHierarchy());
 
     assertEquals(2, typingList.size());
     assertThat(typingList, containsInAnyOrder(typing2, typing3));
@@ -322,7 +323,7 @@ public class TypingMinimizeTest {
     typing4.set(x1, Type4);
     typingList.add(typing4);
 
-    Typing.minimize(typingList, new BytecodeHierarchy());
+    DefaultTypingStrategy.INSTANCE.minimize(typingList, new BytecodeHierarchy());
 
     assertEquals(2, typingList.size());
     assertThat(typingList, containsInAnyOrder(typing1, typing3));
@@ -351,7 +352,7 @@ public class TypingMinimizeTest {
     typing3.set(x1, Type3);
     typingList.add(typing3);
 
-    Typing.minimize(typingList, new BytecodeHierarchy());
+    DefaultTypingStrategy.INSTANCE.minimize(typingList, new BytecodeHierarchy());
 
     assertEquals(3, typingList.size());
 
@@ -421,7 +422,7 @@ public class TypingMinimizeTest {
     typing8.set(x3, Type2);
     typingList.add(typing8);
 
-    Typing.minimize(typingList, new BytecodeHierarchy());
+    DefaultTypingStrategy.INSTANCE.minimize(typingList, new BytecodeHierarchy());
 
     assertEquals(8, typingList.size());
     assertThat(typingList, containsInAnyOrder(typing1, typing2, typing3, typing4, typing5, typing6, typing7, typing8));
@@ -446,7 +447,7 @@ public class TypingMinimizeTest {
     typing3.set(x1, class_AbstractInterfaceClassType);
     typingList.add(typing3);
 
-    Typing.minimize(typingList, new BytecodeHierarchy());
+    DefaultTypingStrategy.INSTANCE.minimize(typingList, new BytecodeHierarchy());
 
     assertEquals(1, typingList.size());
     assertThat(typingList, containsInAnyOrder(typing3));
@@ -472,7 +473,7 @@ public class TypingMinimizeTest {
     typing3.set(x1, abstractClass_Interface2Type);
     typingList.add(typing3);
 
-    Typing.minimize(typingList, new BytecodeHierarchy());
+    DefaultTypingStrategy.INSTANCE.minimize(typingList, new BytecodeHierarchy());
 
     assertEquals(1, typingList.size());
     assertThat(typingList, containsInAnyOrder(typing3));
@@ -497,7 +498,7 @@ public class TypingMinimizeTest {
     typing3.set(x1, numberType);
     typingList.add(typing3);
 
-    Typing.minimize(typingList, new BytecodeHierarchy());
+    DefaultTypingStrategy.INSTANCE.minimize(typingList, new BytecodeHierarchy());
 
     assertEquals(2, typingList.size());
     assertThat(typingList, containsInAnyOrder(typing2, typing1));
@@ -522,7 +523,7 @@ public class TypingMinimizeTest {
     typing3.set(x1, numberType);
     typingList.add(typing3);
 
-    Typing.minimize(typingList, new BytecodeHierarchy());
+    DefaultTypingStrategy.INSTANCE.minimize(typingList, new BytecodeHierarchy());
 
     assertEquals(2, typingList.size());
     assertThat(typingList, containsInAnyOrder(typing2, typing3));
@@ -584,7 +585,7 @@ public class TypingMinimizeTest {
     typing11.set(x1, childClassType);
     typingList.add(typing11);
 
-    Typing.minimize(typingList, new BytecodeHierarchy());
+    DefaultTypingStrategy.INSTANCE.minimize(typingList, new BytecodeHierarchy());
 
     assertEquals(5, typingList.size());
     assertThat(typingList, containsInAnyOrder(typing2, typing5, typing7, typing9, typing11));
@@ -631,7 +632,7 @@ public class TypingMinimizeTest {
     typing8.set(x1, fatherClassType);
     typingList.add(typing8);
 
-    Typing.minimize(typingList, new BytecodeHierarchy());
+    DefaultTypingStrategy.INSTANCE.minimize(typingList, new BytecodeHierarchy());
 
     assertEquals(7, typingList.size());
     assertThat(typingList, containsInAnyOrder(typing2, typing3, typing4, typing5, typing6, typing7, typing8));
