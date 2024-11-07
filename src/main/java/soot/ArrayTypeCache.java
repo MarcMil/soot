@@ -22,10 +22,8 @@ package soot;
  * #L%
  */
 
-import heros.solver.Pair;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
 
 import soot.Singletons.Global;
@@ -36,14 +34,65 @@ import soot.Singletons.Global;
  * @author Marc Miltenberger
  */
 public class ArrayTypeCache {
-  private final Map<Pair<Type, Integer>, ArrayType> cache = new ConcurrentHashMap<>();
+  private static class CacheEntry implements Comparable<CacheEntry> {
+    private Type type;
+    private int dimensions;
 
-  private final Function<Pair<Type, Integer>, ArrayType> mapping = new Function<Pair<Type, Integer>, ArrayType>() {
+    public CacheEntry(Type t, int dimensions) {
+      this.type = t;
+      this.dimensions = dimensions;
+    }
 
     @Override
-    public ArrayType apply(Pair<Type, Integer> t) {
-      final Type baseType = t.getO1();
-      int numDimensions = t.getO2();
+    public int compareTo(CacheEntry o) {
+      if (o == this) {
+        return 0;
+      }
+      int hc1 = System.identityHashCode(this);
+      int hc2 = System.identityHashCode(o);
+      if (hc1 == hc2) {
+        if (dimensions != o.dimensions) {
+          return Integer.compare(dimensions, o.dimensions);
+        } else {
+          if (type.getNumber() != o.type.getNumber()) {
+            return Integer.compare(type.getNumber(), o.type.getNumber());
+          }
+          return type.toString().compareTo(o.type.toString());
+        }
+      } else {
+        return hc1 < hc2 ? -1 : 1;
+      }
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(dimensions, type);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      CacheEntry other = (CacheEntry) obj;
+      return dimensions == other.dimensions && Objects.equals(type, other.type);
+    }
+
+  }
+
+  //Initially we used a normal ConcurrentHashMap, however, it does not support
+  //calling computeIfAbsent recursively 
+  private final ConcurrentSkipListMap<CacheEntry, ArrayType> cache = new ConcurrentSkipListMap<>();
+
+  private final Function<CacheEntry, ArrayType> mapping = new Function<CacheEntry, ArrayType>() {
+
+    @Override
+    public ArrayType apply(CacheEntry t) {
+      final Type baseType = t.type;
+      int numDimensions = t.dimensions;
       final int orgDimensions = numDimensions;
       Type elementType = baseType;
       while (numDimensions > 0) {
@@ -51,7 +100,7 @@ public class ArrayTypeCache {
         if (ret == null) {
           int n = orgDimensions - numDimensions + 1;
           if (n != orgDimensions) {
-            ret = cache.computeIfAbsent(new Pair<>(baseType, n), mapping);
+            ret = cache.computeIfAbsent(new CacheEntry(baseType, n), mapping);
           } else {
             ret = new ArrayType(baseType, n);
           }
@@ -77,8 +126,7 @@ public class ArrayTypeCache {
    * @return the array type
    */
   public ArrayType getArrayType(Type baseType, int numDimensions) {
-    Pair<Type, Integer> pairSearch = new Pair<>(baseType, numDimensions);
-
+    CacheEntry pairSearch = new CacheEntry(baseType, numDimensions);
     return cache.computeIfAbsent(pairSearch, mapping);
 
   }
