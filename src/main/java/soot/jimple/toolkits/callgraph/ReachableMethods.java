@@ -56,8 +56,8 @@ public class ReachableMethods {
     this.filter = filter;
     this.cg = graph;
     this.allowUnconnectedMethods = allowUnconnectedMethods;
-    this.unprocessedMethods = reachables.reader();
     addMethods(entryPoints);
+    this.unprocessedMethods = reachables.reader();
     this.edgeSource = (filter == null) ? graph.listener() : filter.wrap(graph.listener());
   }
 
