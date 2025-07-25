@@ -57,7 +57,6 @@ import org.jf.dexlib2.iface.ExceptionHandler;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodImplementation;
 import org.jf.dexlib2.iface.MethodParameter;
-import org.jf.dexlib2.iface.MultiDexContainer.DexEntry;
 import org.jf.dexlib2.iface.TryBlock;
 import org.jf.dexlib2.iface.debug.DebugItem;
 import org.jf.dexlib2.iface.instruction.Instruction;
@@ -68,7 +67,6 @@ import org.jf.dexlib2.immutable.debug.ImmutableStartLocal;
 import org.jf.dexlib2.util.MethodUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import soot.ArrayType;
 import soot.Body;
 import soot.BooleanConstant;
@@ -216,7 +214,7 @@ public class DexBody {
 
   protected RefType declaringClassType;
 
-  protected final DexEntry<? extends DexFile> dexEntry;
+  protected final DexFile dexEntry;
   protected final Method method;
 
   /**
@@ -293,7 +291,7 @@ public class DexBody {
    * @param method
    *          the method that is associated with this body
    */
-  protected DexBody(DexEntry<? extends DexFile> dexFile, Method method, RefType declaringClassType) {
+  protected DexBody(DexFile dexFile, Method method, RefType declaringClassType) {
     MethodImplementation code = method.getImplementation();
     if (code == null) {
       throw new RuntimeException("error: no code for method " + method.getName());
@@ -665,9 +663,8 @@ public class DexBody {
     jBody.getLocals().add(storeResultLocal);
 
     // process bytecode instructions
-    final DexFile dexFile = dexEntry.getDexFile();
-    final boolean isOdex
-        = dexFile instanceof DexBackedDexFile ? ((DexBackedDexFile) dexFile).supportsOptimizedOpcodes() : false;
+    final DexFile dexFile = dexEntry;
+    final boolean isOdex = dexFile instanceof DexBackedDexFile ? ((DexBackedDexFile) dexFile).hasOdexOpcodes() : false;
 
     ClassPath cp = null;
     if (isOdex) {

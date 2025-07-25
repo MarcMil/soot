@@ -42,7 +42,6 @@ import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
-import org.jf.dexlib2.iface.MultiDexContainer.DexEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -229,14 +228,15 @@ public class DexFileProvider {
     ListIterator<String> entryNameIterator = dexEntryNameList.listIterator(dexFileCount);
     while (entryNameIterator.hasPrevious()) {
       String entryName = entryNameIterator.previous();
-      DexEntry<? extends DexFile> entry = dexContainer.getEntry(entryName);
+      DexBackedDexFile entry = dexContainer.getEntry(entryName);
       if (!acceptFile(entry)) {
         continue;
       }
 
       entryName = deriveDexName(entryName);
-      logger.debug("" + String.format("Found dex file '%s' with %d classes in '%s'", entryName,
-          entry.getDexFile().getClasses().size(), dexSourceFile.getCanonicalPath()));
+
+      logger.debug("" + String.format("Found dex file '%s' with %d classes in '%s'", entryName, entry.getClassCount(),
+          dexSourceFile.getCanonicalPath()));
 
       if (multiple_dex) {
         dexMap.put(entryName, new DexContainer<>(entry, entryName, dexSourceFile));
@@ -253,7 +253,7 @@ public class DexFileProvider {
     return Collections.unmodifiableMap(dexMap);
   }
 
-  protected boolean acceptFile(DexEntry<? extends DexFile> entry) {
+  protected boolean acceptFile(DexBackedDexFile entry) {
     return true;
   }
 
@@ -282,17 +282,17 @@ public class DexFileProvider {
   }
 
   public static final class DexContainer<T extends DexFile> {
-    private final DexEntry<T> base;
+    private final T base;
     private final String name;
     private final File filePath;
 
-    public DexContainer(DexEntry<T> base, String name, File filePath) {
+    public DexContainer(T base, String name, File filePath) {
       this.base = base;
       this.name = name;
       this.filePath = filePath;
     }
 
-    public DexEntry<T> getBase() {
+    public T getBase() {
       return base;
     }
 

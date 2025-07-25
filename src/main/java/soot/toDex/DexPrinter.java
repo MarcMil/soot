@@ -654,7 +654,7 @@ public class DexPrinter {
         Set<Annotation> fieldAnnotations = buildFieldAnnotations(f);
 
         ImmutableField field = new ImmutableField(classType, f.getName(), SootToDexUtils.getDexTypeDescriptor(f.getType()),
-            f.getModifiers(), staticInit, fieldAnnotations, null);
+            f.getModifiers(), staticInit, fieldAnnotations);
         fields.add(field);
       }
     }
@@ -1109,7 +1109,7 @@ public class DexPrinter {
       String returnType = SootToDexUtils.getDexTypeDescriptor(sm.getReturnType());
 
       ImmutableMethod meth = new ImmutableMethod(classType, sm.getName(), parameters, returnType,
-          SootToDexUtils.getDexAccessFlags(sm), buildMethodAnnotations(sm), null, impl);
+          SootToDexUtils.getDexAccessFlags(sm), buildMethodAnnotations(sm), impl);
       methods.add(meth);
     }
     return methods;

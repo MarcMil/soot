@@ -42,7 +42,6 @@ import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.reference.DexBackedTypeReference;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.iface.MultiDexContainer.DexEntry;
 
 import soot.ArrayType;
 import soot.CompilationDeathException;
@@ -78,17 +77,17 @@ public class DexlibWrapper {
   private final DexClassLoader dexLoader = createDexClassLoader();
 
   private static class ClassInformation {
-    public DexEntry<? extends DexFile> dexEntry;
+    public DexFile dexEntry;
     public ClassDef classDefinition;
 
-    public ClassInformation(DexEntry<? extends DexFile> entry, ClassDef classDef) {
+    public ClassInformation(DexFile entry, ClassDef classDef) {
       this.dexEntry = entry;
       this.classDefinition = classDef;
     }
   }
 
   private final Map<String, ClassInformation> classesToDefItems = new HashMap<String, ClassInformation>();
-  private final Collection<DexEntry<? extends DexFile>> dexFiles;
+  private final Collection<DexFile> dexFiles;
 
   /**
    * Construct a DexlibWrapper from a dex file and stores its classes referenced by their name. No further process is done
@@ -117,8 +116,8 @@ public class DexlibWrapper {
 
   public void initialize() {
     // resolve classes in dex files
-    for (DexEntry<? extends DexFile> dexEntry : dexFiles) {
-      final DexFile dexFile = dexEntry.getDexFile();
+    for (DexFile dexEntry : dexFiles) {
+      final DexFile dexFile = dexEntry;
       for (ClassDef defItem : dexFile.getClasses()) {
         String forClassName = Util.dottedClassName(defItem.getType());
         classesToDefItems.put(forClassName, new ClassInformation(dexEntry, defItem));
@@ -127,11 +126,13 @@ public class DexlibWrapper {
 
     // It is important to first resolve the classes, otherwise we will
     // produce an error during type resolution.
-    for (DexEntry<? extends DexFile> dexEntry : dexFiles) {
-      final DexFile dexFile = dexEntry.getDexFile();
+    for (final DexFile dexFile : dexFiles) {
       if (dexFile instanceof DexBackedDexFile) {
-        for (DexBackedTypeReference typeRef : ((DexBackedDexFile) dexFile).getTypeReferences()) {
+        for (DexBackedTypeReference typeRef : ((DexBackedDexFile) dexFile).getTypes()) {
           String t = typeRef.getType();
+          if (t.startsWith("L") && classesToDefItems.containsKey(t.substring(1, t.length() - 1).replace('/', '.'))) {
+            continue;
+          }
 
           Type st = DexType.toSoot(t);
           if (st instanceof ArrayType) {

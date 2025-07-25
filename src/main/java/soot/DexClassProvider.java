@@ -103,7 +103,7 @@ public class DexClassProvider implements ClassProvider {
         File dexFile = new File(path);
         if (dexFile.exists()) {
           for (DexFileProvider.DexContainer<? extends DexFile> container : DexFileProvider.v().getDexFromSource(dexFile)) {
-            for (String className : classesOfDex(container.getBase().getDexFile())) {
+            for (String className : classesOfDex(container.getBase())) {
               if (!index.containsKey(className)) {
                 index.put(className, container.getFilePath());
               } else if (Options.v().verbose()) {

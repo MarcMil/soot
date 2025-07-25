@@ -28,7 +28,6 @@ import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Method;
-import org.jf.dexlib2.iface.MultiDexContainer.DexEntry;
 
 import soot.Modifier;
 import soot.SootClass;
@@ -68,7 +67,7 @@ public class DexClassLoader {
     annotations.handleMethodAnnotation(sm, method);
   }
 
-  public Dependencies makeSootClass(SootClass sc, ClassDef defItem, DexEntry<? extends DexFile> dexEntry) {
+  public Dependencies makeSootClass(SootClass sc, ClassDef defItem, DexFile dexEntry) {
     String superClass = defItem.getSuperclass();
     Dependencies deps = new Dependencies();
 
@@ -225,7 +224,7 @@ public class DexClassLoader {
    * @param sc
    * @return
    */
-  protected DexMethod createDexMethodFactory(DexEntry<? extends DexFile> dexEntry, SootClass sc) {
+  protected DexMethod createDexMethodFactory(DexFile dexEntry, SootClass sc) {
     return new DexMethod(dexEntry, sc);
   }
 

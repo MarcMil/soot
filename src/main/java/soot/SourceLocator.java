@@ -1,5 +1,4 @@
 package soot;
-
 /*-
  * #%L
  * Soot - a J*va Optimization Framework
@@ -380,7 +379,7 @@ public class SourceLocator {
       // Get the dex file from an apk
       try {
         for (DexFileProvider.DexContainer<? extends DexFile> dex : DexFileProvider.v().getDexFromSource(new File(aPath))) {
-          classes.addAll(DexClassProvider.classesOfDex(dex.getBase().getDexFile()));
+          classes.addAll(DexClassProvider.classesOfDex(dex.getBase()));
         }
       } catch (IOException e) {
         throw new CompilationDeathException("Error reading dex source", e);
@@ -402,7 +401,7 @@ public class SourceLocator {
       // we might have dex files inside the archive
       try {
         for (DexFileProvider.DexContainer<? extends DexFile> dex : DexFileProvider.v().getDexFromSource(new File(aPath))) {
-          classes.addAll(DexClassProvider.classesOfDex(dex.getBase().getDexFile()));
+          classes.addAll(DexClassProvider.classesOfDex(dex.getBase()));
         }
       } catch (CompilationDeathException e) {
         // There might be cases where there is no dex file within a JAR or ZIP file...
@@ -483,7 +482,7 @@ public class SourceLocator {
           } else if (fileName.endsWith(".dex")) {
             try {
               for (DexFileProvider.DexContainer<? extends DexFile> dex : DexFileProvider.v().getDexFromSource(element)) {
-                classes.addAll(DexClassProvider.classesOfDex(dex.getBase().getDexFile()));
+                classes.addAll(DexClassProvider.classesOfDex(dex.getBase()));
               }
             } catch (IOException e) {
               /* Ignore unreadable files */

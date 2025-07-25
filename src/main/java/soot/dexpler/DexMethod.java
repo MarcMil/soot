@@ -34,7 +34,6 @@ import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.Method;
-import org.jf.dexlib2.iface.MultiDexContainer.DexEntry;
 import org.jf.dexlib2.iface.value.ArrayEncodedValue;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.TypeEncodedValue;
@@ -61,10 +60,10 @@ import soot.options.Options;
 public class DexMethod {
   private static final Logger logger = LoggerFactory.getLogger(DexMethod.class);
 
-  protected final DexEntry<? extends DexFile> dexEntry;
+  protected final DexFile dexEntry;
   protected final SootClass declaringClass;
 
-  public DexMethod(final DexEntry<? extends DexFile> dexFile, final SootClass declaringClass) {
+  public DexMethod(final DexFile dexFile, final SootClass declaringClass) {
     this.dexEntry = dexFile;
     this.declaringClass = declaringClass;
   }
