@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +77,15 @@ public class SootClass extends AbstractHost {
   public final static int HIERARCHY = 1;
   public final static int SIGNATURES = 2;
   public final static int BODIES = 3;
+
+  private static final Function<? super NameAndNumber, ? extends List<SootMethod>> NEW_LIST_FACTORY
+      = new Function<NameAndNumber, List<SootMethod>>() {
+
+        @Override
+        public List<SootMethod> apply(NameAndNumber t) {
+          return new ArrayList<>();
+        }
+      };
 
   protected String name, shortName, fixedShortName, packageName, fixedPackageName;
   protected int modifiers;
@@ -691,11 +701,8 @@ public class SootClass extends AbstractHost {
   }
 
   protected void addToNameAndParamMap(SootMethod m) {
-    List<SootMethod> newList = new ArrayList<>();
-    List<SootMethod> use = methodParameterMap.putIfAbsent(new NameAndNumber(m.getName(), m.getParameterCount()), newList);
-    if (use == null) {
-      use = newList;
-    }
+    List<SootMethod> use
+        = methodParameterMap.computeIfAbsent(new NameAndNumber(m.getName(), m.getParameterCount()), NEW_LIST_FACTORY);
     use.add(m);
   }
 
