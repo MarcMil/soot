@@ -84,6 +84,7 @@ public class JimpleBody extends StmtBody {
    * Construct an extremely empty JimpleBody, for parsing into.
    */
   public JimpleBody() {
+
   }
 
   /**
@@ -101,7 +102,7 @@ public class JimpleBody extends StmtBody {
   @Override
   public Object clone(boolean noLocalsClone) {
     Body b = new JimpleBody(getMethod());
-    b.importBodyContentsFrom(this, true);
+    b.importBodyContentsFrom(this, noLocalsClone);
     return b;
   }
 
