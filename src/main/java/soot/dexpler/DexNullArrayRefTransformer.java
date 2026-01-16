@@ -88,6 +88,7 @@ public class DexNullArrayRefTransformer extends BodyTransformer {
     return new DexNullArrayRefTransformer();
   }
 
+  @Override
   protected void internalTransform(final Body body, String phaseName, Map<String, String> options) {
     final ExceptionalUnitGraph g = ExceptionalUnitGraphFactory.createExceptionalUnitGraph(body, DalvikThrowAnalysis.v());
     final LocalDefs defs = G.v().soot_toolkits_scalar_LocalDefsFactory().newLocalDefs(g);
@@ -143,9 +144,6 @@ public class DexNullArrayRefTransformer extends BodyTransformer {
    */
   private boolean isAlwaysNullBefore(Stmt s, Local base, LocalDefs defs) {
     List<Unit> baseDefs = defs.getDefsOfAt(base, s);
-    if (baseDefs.isEmpty()) {
-      return true;
-    }
 
     for (Unit u : baseDefs) {
       if (!(u instanceof DefinitionStmt)) {
