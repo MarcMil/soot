@@ -313,7 +313,6 @@ import soot.options.Options;
 import soot.tagkit.LineNumberTag;
 import soot.tagkit.Tag;
 import soot.toolkits.exceptions.TrapTightener;
-import soot.toolkits.scalar.LocalPacker;
 import soot.util.Chain;
 
 /**
@@ -2445,7 +2444,6 @@ public class AsmMethodSource implements MethodSource {
     }
     TrapTightener.removeInvalidTraps(jb);
 
-    LocalPacker.v().transform(jb);
     DeadAssignmentEliminator.v().transform(jb);
     UnconditionalBranchFolder.v().transform(jb);
 
