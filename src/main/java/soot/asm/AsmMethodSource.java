@@ -2427,6 +2427,7 @@ public class AsmMethodSource implements MethodSource {
 
     // We can have cases where the Java compiler inserts unnecessary traps, which might cause problems later in typing
     TrapTightener.v().transform(jb);
+    LocalPacker.v().transform(jb);
     UnreachableCodeEliminator.v().transform(jb);
 
     // Make sure to inline patterns of the form to enable proper variable
@@ -2444,8 +2445,6 @@ public class AsmMethodSource implements MethodSource {
       throw new RuntimeException("Failed to apply jb to " + m, t);
     }
     TrapTightener.removeInvalidTraps(jb);
-
-    LocalPacker.v().transform(jb);
     DeadAssignmentEliminator.v().transform(jb);
     UnconditionalBranchFolder.v().transform(jb);
 
