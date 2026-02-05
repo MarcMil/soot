@@ -132,19 +132,20 @@ public abstract class FlowAnalysis<N, A> extends AbstractFlowAnalysis<N, A> {
       List<D> entries = null;
       List<D> actualEntries = gv.getEntries(g);
 
-      if (!actualEntries.isEmpty()) {
-        // normal cases: there is at least
-        // one return statement for a backward analysis
-        // or one entry statement for a forward analysis
-        entries = actualEntries;
-      } else {
-        // cases without any entry statement
-
-        if (isForward) {
+      if (isForward) {
+        if (!actualEntries.isEmpty()) {
+          // normal cases: there is at least
+          // one return statement for a backward analysis
+          // or one entry statement for a forward analysis
+          entries = actualEntries;
+        } else {
           // case of a forward flow analysis on
           // a method without any entry point
           throw new RuntimeException("error: no entry point for method in forward analysis");
-        } else {
+        }
+      } else {
+        if (!actualEntries.isEmpty()) {
+
           // case of backward analysis on
           // a method which potentially has
           // an infinite loop and no return statement
@@ -179,6 +180,8 @@ public abstract class FlowAnalysis<N, A> extends AbstractFlowAnalysis<N, A> {
           if (entries.isEmpty()) {
             throw new RuntimeException("error: backward analysis on an empty entry set.");
           }
+        }else {
+          throw new RuntimeException("error: no entry point for method in backward analysis");
         }
       }
 
