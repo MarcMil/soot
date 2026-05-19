@@ -814,6 +814,9 @@ public class TypeResolver {
 
           }
           for (Type t : lcas) {
+            if (!t.isAllowedInFinalCode()) {
+              continue;
+            }
             if (!typesEqual(t, told)) {
               BitSet dependsV = this.depends.get(v);
               ITyping tg_;
