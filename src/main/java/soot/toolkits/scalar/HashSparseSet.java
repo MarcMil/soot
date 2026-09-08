@@ -28,27 +28,18 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
- * Reference implementation for a FlowSet. Items are stored in an HashSet which is a more scalable
- * version of ArraySparseSet.
+ * Reference implementation for a FlowSet. Items are stored in an HashSet which is a more scalable version of ArraySparseSet.
  */
 public class HashSparseSet<T> extends AbstractFlowSet<T> {
   protected LinkedHashSet<T> elements;
 
   public HashSparseSet() {
-    @SuppressWarnings("unchecked")
     LinkedHashSet<T> newElements = new LinkedHashSet<T>();
     elements = newElements;
   }
 
   private HashSparseSet(HashSparseSet<T> other) {
     elements = new LinkedHashSet<T>(other.elements);
-  }
-
-  /**
-   * Returns true if flowSet is the same type of flow set as this.
-   */
-  private boolean sameType(Object flowSet) {
-    return (flowSet instanceof HashSparseSet);
   }
 
   @Override
@@ -64,7 +55,6 @@ public class HashSparseSet<T> extends AbstractFlowSet<T> {
   @Override
   public void clear() {
     elements.clear();
-    ;
   }
 
   @Override
@@ -98,25 +88,9 @@ public class HashSparseSet<T> extends AbstractFlowSet<T> {
     elements.remove(obj);
   }
 
-  public void remove(int idx) {
-    Iterator<T> itr = elements.iterator();
-    int currentIndex = 0;
-    Object elem = null;
-    while (itr.hasNext()) {
-      elem = itr.next();
-      if (currentIndex == idx) {
-        break;
-      }
-      currentIndex++;
-    }
-    if (elem != null) {
-      elements.remove(elem);
-    }
-  }
-
   @Override
   public void union(FlowSet<T> otherFlow, FlowSet<T> destFlow) {
-    if (sameType(otherFlow) && sameType(destFlow)) {
+    if (otherFlow instanceof HashSparseSet && destFlow instanceof HashSparseSet) {
       HashSparseSet<T> other = (HashSparseSet<T>) otherFlow;
       HashSparseSet<T> dest = (HashSparseSet<T>) destFlow;
       dest.elements.addAll(this.elements);
@@ -128,7 +102,7 @@ public class HashSparseSet<T> extends AbstractFlowSet<T> {
 
   @Override
   public void intersection(FlowSet<T> otherFlow, FlowSet<T> destFlow) {
-    if (sameType(otherFlow) && sameType(destFlow)) {
+    if (otherFlow instanceof HashSparseSet && destFlow instanceof HashSparseSet) {
       HashSparseSet<T> other = (HashSparseSet<T>) otherFlow;
       HashSparseSet<T> dest = (HashSparseSet<T>) destFlow;
       HashSparseSet<T> workingSet = new HashSparseSet<>(this);
@@ -141,7 +115,7 @@ public class HashSparseSet<T> extends AbstractFlowSet<T> {
 
   @Override
   public void difference(FlowSet<T> otherFlow, FlowSet<T> destFlow) {
-    if (sameType(otherFlow) && sameType(destFlow)) {
+    if (otherFlow instanceof HashSparseSet && destFlow instanceof HashSparseSet) {
       HashSparseSet<T> other = (HashSparseSet<T>) otherFlow;
       HashSparseSet<T> dest = (HashSparseSet<T>) destFlow;
       HashSparseSet<T> workingSet;
@@ -172,7 +146,7 @@ public class HashSparseSet<T> extends AbstractFlowSet<T> {
 
   @Override
   public boolean equals(Object otherFlow) {
-    if (sameType(otherFlow)) {
+    if ((otherFlow instanceof HashSparseSet)) {
       @SuppressWarnings("unchecked")
       HashSparseSet<T> other = (HashSparseSet<T>) otherFlow;
       return this.elements.equals(other.elements);
@@ -183,10 +157,9 @@ public class HashSparseSet<T> extends AbstractFlowSet<T> {
 
   @Override
   public void copy(FlowSet<T> destFlow) {
-    if (sameType(destFlow)) {
+    if ((destFlow instanceof HashSparseSet)) {
       HashSparseSet<T> dest = (HashSparseSet<T>) destFlow;
-      dest.elements.clear();
-      dest.elements.addAll(this.elements);
+      dest.elements = new LinkedHashSet<T>(this.elements);
     } else {
       super.copy(destFlow);
     }
