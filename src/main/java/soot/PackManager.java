@@ -945,7 +945,10 @@ public class PackManager {
     }
   }
 
-  private void retrieveAllBodies() {
+  /**
+   * Retrieves all method bodies.
+   */
+  public void retrieveAllBodies() {
     int threadNum = Runtime.getRuntime().availableProcessors();
     CountingThreadPoolExecutor executor
         = new CountingThreadPoolExecutor(threadNum, threadNum, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
