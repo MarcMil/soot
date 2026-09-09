@@ -96,7 +96,7 @@ public class CallGraph implements Iterable<Edge> {
    */
   public boolean removeAllEdgesOutOf(Unit u) {
     Set<Edge> edgesToRemove = new HashSet<>();
-    for (Iterator<Edge> it = edgesOutOf(u); it.hasNext(); ) {
+    for (Iterator<Edge> it = edgesOutOf(u); it.hasNext();) {
       edgesToRemove.add(it.next());
     }
     return removeEdges(edgesToRemove);
@@ -268,6 +268,9 @@ public class CallGraph implements Iterable<Edge> {
     public Edge next() {
       Edge ret = position;
       position = position.nextByUnit();
+      if (position == ret) {
+        position = dummy;
+      }
       return ret;
     }
 
@@ -354,6 +357,9 @@ public class CallGraph implements Iterable<Edge> {
     public Edge next() {
       Edge ret = position;
       position = position.nextByTgt();
+      if (position == ret) {
+        position = dummy;
+      }
       return ret;
     }
 
