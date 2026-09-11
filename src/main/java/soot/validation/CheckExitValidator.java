@@ -46,7 +46,8 @@ public enum CheckExitValidator implements BodyValidator {
         }
       }
       exception.add(new ValidationException(last,
-          "Last statement is a fallthrough statement; it should be a non-fallthrough statement such as a return or a throw."));
+          "Last statement is a fallthrough statement; it should be a non-fallthrough statement such as "
+              + "a return or a throw."));
     }
   }
 
