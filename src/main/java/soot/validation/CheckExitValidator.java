@@ -25,6 +25,7 @@ package soot.validation;
 import java.util.List;
 
 import soot.Body;
+import soot.Trap;
 import soot.Unit;
 
 public enum CheckExitValidator implements BodyValidator {
@@ -38,6 +39,12 @@ public enum CheckExitValidator implements BodyValidator {
   public void validate(Body body, List<ValidationException> exception) {
     Unit last = body.getUnits().getLast();
     if (last.fallsThrough()) {
+      for (Trap exc : body.getTraps()) {
+        if (exc.getEndUnit() == last) {
+          // That's fine.
+          return;
+        }
+      }
       exception.add(new ValidationException(last,
           "Last statement is a fallthrough statement; it should be a non-fallthrough statement such as a return or a throw."));
     }
